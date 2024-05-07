@@ -1,0 +1,7 @@
+ips:
+  default: 
+    0.0.0.000
+password: password
+modules: 
+ - /home/module
+ - /home/module/akshare

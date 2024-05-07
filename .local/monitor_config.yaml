@@ -1,0 +1,13 @@
+root_dir:
+  s2d: home/s2d
+  realtime: /home/realtime
+  data_check: /home/data/check_log
+  crontab: /home/crontab
+machines:
+  client:
+    - - A
+      - B
+  trade:
+    - - A
+      - B
+

@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<!-- 引入 Bootstrap CSS -->
+<!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> -->
+<link rel="stylesheet" href="{% static 'css/baseStyle.css' %}">
+<link rel="stylesheet" href="{% static 'css/alert.css' %}">
+<link rel="stylesheet" href="{% static 'css/button.css' %}">
+<link rel="stylesheet" href="{% static 'css/input.css' %}">
+<link rel="stylesheet" href="{% static 'css/table.css' %}">
+<link rel="stylesheet" href="{% static 'css/select.css' %}">
+<!-- <form method="post" name="refresh" action="{% url 'dataframe' %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">fetching data from src</button>
+</form> 
+
+<div class="modal" tabindex="-1" role="dialog" id="myModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">fetching data</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                <div class="modal-body">
+                    fetching success !
+                </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" id="close_modal">确定</button>
+            </div>
+        </div>
+    </div>
+</div> -->
+<div id="content" class="fade-in">
+    <div class="dropdown inline-element">
+        <button id="dropdown-button">Columns ▼</button>
+        <div class="dropdown-content" id="column-menu">
+        <!-- 列选择菜单将通过JavaScript生成 -->
+        </div>
+    </div>
+
+    <button onclick="fetchingCache()" class="inline-element">fetch cache</button>
+    
+    <form method="post" action="" class="inline-element" style="display:inline;">
+        {% csrf_token %}
+        <select name="rootDirDropDown" onchange="this.form.submit()">
+            <option value="default" selected>choose root directory</option>
+            {% for root_dir in root_dirs %}
+                <option value="{{ root_dir }}">{{ root_dir }}</option>
+            {% endfor %}
+        </select>
+    </form >
+
+    <a href="{% url 'downloadFile' %}" class="inline-element" style="display:inline;"><span>   </span>  <span>DownloadCsv    </span></a>
+
+    <input type='submit' class='my-input' name='show_html' value=ShowCorr data-path=/home/fisher_research/Data/AlphaIO_checkpoint/corr/html/alpha/corr.html data-val={val} data-row=0>
+
+    <h3>you are in : {{ root_dir }}</h3> <br>
+
+    <div class="my-table" id="my-table" onscroll="recordScrollPosition(event)">
+        {{ html_table | safe}}
+    </div>
+
+
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{% static 'js/sortTable.js' %}"></script>
+<script src="{% static 'js/recordScroll.js' %}"></script>
+<script src="{% static 'js/generateHiddenBar.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+    //转跳到显示网页
+    var inputElements = document.querySelectorAll('input');
+    inputElements.forEach(function(inputElement){
+        inputElement.addEventListener('click', function(event){
+                console.log(inputElement.name)
+                window.open("{% url 'display_html' %}?name=" + inputElement.name + "&val=" + inputElement.val + '&path=' + inputElement.dataset.path + '&row=' + inputElement.dataset.row); 
+        })
+    })
+
+
+    function fetchingCache(){
+        const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+        console.log('start fetching');
+        fetch('/display_image/download', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken,
+            },
+            body: JSON.stringify({})
+        }).then(response=>{
+            if (response.ok){
+                console.log('success!!');
+                location.reload();
+            }else{
+                console.log('sth went wrong')
+            }
+        }).catch(error=>{
+            console.log(error);
+        })
+    }
+
+
+</script>
+{% endblock %}    
+
+

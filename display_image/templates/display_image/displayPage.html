@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <link rel="stylesheet" href="{% static 'css/baseStyle.css' %}">
+    <link rel="stylesheet" href="{% static 'css/button.css' %}">
+    <link rel="stylesheet" href="{% static 'css/input.css' %}">
+    <!-- <form method="POST" action="">
+        {% csrf_token %}
+        <button type="submit" name="previous">Previous</button>
+        <button type="submit" name="next">Next</button>
+    </form> -->
+    <h2>related graph:</h2>
+    {% for path in path_set %}
+        <input type='submit' class='my-input' name='show_html' value='{{ path }}' data-path='{{ path }}' data-path='{{ path }}' data-val='{{ path }}' data-row='{{ row }}'>
+    {% endfor %}
+    <br>
+
+    <h2>info:</h2>
+    <h3>path: {{path}}   value: {{val}}</h3> 
+    {{html | safe}}
+
+
+<script>
+    var inputElements = document.querySelectorAll('input');
+    inputElements.forEach(function(inputElement){
+        inputElement.addEventListener("mouseover", function(){
+            inputElement.classList.add("clicked");
+        })
+        inputElement.addEventListener("mouseout", function(){
+            inputElement.classList.remove("clicked");
+        })
+        inputElement.addEventListener('click', function(event){
+                console.log(inputElement.name)
+                window.location.href = "{% url 'display_html' %}?name=" + inputElement.name + "&val=" + inputElement.val + '&path=' + inputElement.dataset.path + '&row=' + inputElement.dataset.row; 
+        })
+    })
+</script>
+{% endblock %}
